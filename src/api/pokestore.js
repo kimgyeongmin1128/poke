@@ -1,21 +1,4 @@
-/**
- * 포켓몬 API 데이터 관리 파일
- *
- * 이 파일은 PokeAPI를 사용해서 포켓몬 데이터를 가져오고 관리하는 기능을 제공합니다.
- *
- * 주요 기능:
- * 1. fetchPokestore() - 포켓몬 기본 정보 가져오기 (이름, ID, 이미지)
- * 2. fetchKoreanNames() - 포켓몬 한국어 이름 가져오기
- * 3. fetchPokemonTypes() - 포켓몬 타입 정보 가져오기 (불꽃, 물, 풀 등)
- * 4. loadAllPokemonData() - 위의 모든 데이터를 순차적으로 로딩하는 통합 함수
- *
- * API 호출 과정:
- * - PokeAPI는 무료 포켓몬 데이터 API입니다
- * - 여러 API 엔드포인트를 조합해서 완전한 포켓몬 정보를 구성합니다
- * - Promise.all을 사용해서 여러 API를 동시에 호출하여 성능을 최적화합니다
- */
-
-import axios from "axios";
+import pokeApiInstance from "./axiosInstance";
 
 /**
  * 포켓몬 데이터를 저장하는 전역 배열
@@ -35,12 +18,8 @@ const fetchNum = 154;
  */
 export const fetchPokestore = async () => {
   try {
-    // PokeAPI에서 포켓몬 목록을 가져오는 URL 생성
-    // limit 파라미터로 가져올 포켓몬 개수를 지정합니다
-    const url = `https://pokeapi.co/api/v2/pokemon?limit=${fetchNum}`;
-
-    // axios.get으로 HTTP 요청을 보냅니다
-    const res = await axios.get(url);
+    // axios 인스턴스로 HTTP 요청을 보냅니다
+    const res = await pokeApiInstance.get(`/pokemon?limit=${fetchNum}`);
 
     // 응답 데이터는 res.data로 접근합니다
     const data = res.data;
@@ -78,11 +57,11 @@ export const fetchKoreanNames = async () => {
 
     // 1번부터 fetchNum까지의 포켓몬 species API URL을 생성합니다
     for (let i = 1; i <= fetchNum; i++) {
-      urls.push(`https://pokeapi.co/api/v2/pokemon-species/${i}`);
+      urls.push(`/pokemon-species/${i}`);
     }
 
-    // 모든 URL에 동시에 요청을 보내기 위해 axios.get 요청 배열로 만듭니다
-    const requests = urls.map((url) => axios.get(url));
+    // 모든 URL에 동시에 요청을 보내기 위해 axios 인스턴스 요청 배열로 만듭니다
+    const requests = urls.map((url) => pokeApiInstance.get(url));
 
     // Promise.all을 사용해서 모든 요청이 완료될 때까지 기다립니다
     const responses = await Promise.all(requests);
@@ -131,11 +110,11 @@ export const fetchPokemonTypes = async () => {
 
     // 1번부터 fetchNum까지의 포켓몬 상세 API URL을 생성합니다
     for (let i = 1; i <= fetchNum; i++) {
-      urls.push(`https://pokeapi.co/api/v2/pokemon/${i}`);
+      urls.push(`/pokemon/${i}`);
     }
 
-    // 모든 URL에 동시에 요청을 보내기 위해 axios.get 요청 배열로 만듭니다
-    const requests = urls.map((url) => axios.get(url));
+    // 모든 URL에 동시에 요청을 보내기 위해 axios 인스턴스 요청 배열로 만듭니다
+    const requests = urls.map((url) => pokeApiInstance.get(url));
 
     // Promise.all을 사용해서 모든 요청이 완료될 때까지 기다립니다
     const responses = await Promise.all(requests);
