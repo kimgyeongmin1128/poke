@@ -1,3 +1,22 @@
+/**
+ * pokestore.js - 포켓몬 API 데이터 관리
+ *
+ * 이 파일은 PokeAPI를 통해 포켓몬 관련 데이터를 가져오는 함수들을 제공합니다.
+ * 포켓몬 목록, 한국어 이름, 타입 정보 등을 API에서 가져와서 처리합니다.
+ *
+ * 주요 기능:
+ * 1. 포켓몬 기본 정보 로드 (1세대 151마리)
+ * 2. 포켓몬 한국어 이름 로드
+ * 3. 포켓몬 타입 정보 로드
+ * 4. 병렬 API 호출로 성능 최적화
+ * 5. 에러 처리 및 폴백
+ *
+ * API 엔드포인트:
+ * - /pokemon: 포켓몬 목록
+ * - /pokemon/{id}: 포켓몬 상세 정보
+ * - /pokemon-species: 포켓몬 종류 정보 (한국어 이름 포함)
+ * - /type: 포켓몬 타입 정보
+ */
 import pokeApiInstance from "./axiosInstance";
 
 /**
@@ -9,11 +28,12 @@ export let arrPokemon = [];
 /**
  * 가져올 포켓몬의 개수를 설정하는 상수 (axios 사용)
  */
-const fetchNum = 154;
+const fetchNum = 300;
 
 /**
  * 포켓몬의 기본 정보를 가져오는 함수
  * PokeAPI에서 포켓몬 목록을 가져와서 기본 정보를 구성합니다
+ *
  * @returns {Array} 포켓몬 기본 정보 배열
  */
 export const fetchPokestore = async () => {
@@ -48,126 +68,161 @@ export const fetchPokestore = async () => {
 /**
  * 포켓몬의 한국어 이름을 가져오는 함수
  * 각 포켓몬의 species 정보에서 한국어 이름을 찾아서 추가합니다
- * @returns {Object} 포켓몬 ID를 키로 하는 한국어 이름 객체
+ *
+ * @param {Array} pokemonList - 포켓몬 데이터 배열
+ * @returns {Promise<Array>} 한국어 이름이 추가된 포켓몬 데이터 배열
  */
-export const fetchKoreanNames = async () => {
+export const loadKoreanNames = async (pokemonList) => {
   try {
-    // 각 포켓몬의 species 정보를 가져오기 위한 URL 배열을 생성합니다
-    const urls = [];
+    // 포켓몬 종류 정보 가져오기 (한국어 이름 포함)
+    const speciesResponse = await pokeApiInstance.get(
+      "/pokemon-species?limit=151"
+    );
+    const speciesList = speciesResponse.data.results;
 
-    // 1번부터 fetchNum까지의 포켓몬 species API URL을 생성합니다
-    for (let i = 1; i <= fetchNum; i++) {
-      urls.push(`/pokemon-species/${i}`);
-    }
+    // 각 포켓몬 종류의 한국어 이름을 병렬로 가져오기
+    const koreanNames = await Promise.all(
+      speciesList.map(async (species) => {
+        try {
+          const speciesDetailResponse = await pokeApiInstance.get(species.url);
+          const speciesData = speciesDetailResponse.data;
 
-    // 모든 URL에 동시에 요청을 보내기 위해 axios 인스턴스 요청 배열로 만듭니다
-    const requests = urls.map((url) => pokeApiInstance.get(url));
+          // 한국어 이름 찾기
+          const koreanName = speciesData.names.find(
+            (name) => name.language.name === "ko"
+          )?.name;
 
-    // Promise.all을 사용해서 모든 요청이 완료될 때까지 기다립니다
-    const responses = await Promise.all(requests);
+          return {
+            id: speciesData.id,
+            koreanName: koreanName || speciesData.name, // 한국어 이름이 없으면 영어 이름 사용
+          };
+        } catch (error) {
+          console.error(
+            `포켓몬 종류 ${species.name} 정보를 가져오는데 실패:`,
+            error
+          );
+          // 실패 시 URL에서 ID 추출하여 기본값 반환
+          return {
+            id: species.url.split("/").slice(-2, -1)[0],
+            koreanName: species.name,
+          };
+        }
+      })
+    );
 
-    // 각 응답의 data를 추출합니다
-    const results = responses.map((res) => res.data);
-
-    // 한국어 이름을 저장할 객체를 생성합니다
-    const koreanNames = {};
-
-    // 각 포켓몬의 결과에서 한국어 이름을 찾습니다
-    results.forEach((result, index) => {
-      // names 배열에서 언어가 "ko"인 이름을 찾습니다
-      const koreanName = result.names.find(
-        (name) => name.language.name === "ko"
+    // 포켓몬 데이터에 한국어 이름 추가
+    const pokemonWithKoreanNames = pokemonList.map((pokemon) => {
+      const koreanNameData = koreanNames.find(
+        (nameData) => nameData.id === pokemon.id
       );
-
-      // 한국어 이름이 있으면 저장합니다
-      if (koreanName) {
-        koreanNames[index + 1] = koreanName.name;
-      }
+      return {
+        ...pokemon,
+        koreanName: koreanNameData?.koreanName || pokemon.name, // 한국어 이름이 없으면 영어 이름 사용
+      };
     });
 
-    // 기존 포켓몬 배열에 한국어 이름을 추가합니다
-    arrPokemon = arrPokemon.map((pokemon) => ({
-      ...pokemon, // 기존 정보는 그대로 유지
-      koreanName: koreanNames[pokemon.id] || pokemon.name, // 한국어 이름이 없으면 영어 이름 사용
-    }));
-
-    return koreanNames;
+    return pokemonWithKoreanNames;
   } catch (error) {
-    // 에러가 발생하면 빈 객체를 반환합니다
-    return {};
+    console.error("한국어 이름을 가져오는데 실패했습니다:", error);
+    // 실패 시 원본 데이터 반환
+    return pokemonList;
   }
 };
 
 /**
- * 포켓몬의 타입 정보를 가져오는 함수
- * 각 포켓몬의 상세 정보에서 타입(불꽃, 물, 풀 등)을 가져와서 추가합니다
- * @returns {Object} 포켓몬 ID를 키로 하는 타입 배열 객체
- */
-export const fetchPokemonTypes = async () => {
-  try {
-    // 각 포켓몬의 상세 정보를 가져오기 위한 URL 배열을 생성합니다
-    const urls = [];
-
-    // 1번부터 fetchNum까지의 포켓몬 상세 API URL을 생성합니다
-    for (let i = 1; i <= fetchNum; i++) {
-      urls.push(`/pokemon/${i}`);
-    }
-
-    // 모든 URL에 동시에 요청을 보내기 위해 axios 인스턴스 요청 배열로 만듭니다
-    const requests = urls.map((url) => pokeApiInstance.get(url));
-
-    // Promise.all을 사용해서 모든 요청이 완료될 때까지 기다립니다
-    const responses = await Promise.all(requests);
-
-    // 각 응답의 data를 추출합니다
-    const results = responses.map((res) => res.data);
-
-    // 포켓몬 타입을 저장할 객체를 생성합니다
-    const pokemonTypes = {};
-
-    // 각 포켓몬의 결과에서 타입 정보를 추출합니다
-    results.forEach((result, index) => {
-      // types 배열에서 각 타입의 이름을 추출합니다
-      const types = result.types.map((type) => type.type.name);
-      pokemonTypes[index + 1] = types;
-    });
-
-    // 기존 포켓몬 배열에 타입 정보를 추가합니다
-    arrPokemon = arrPokemon.map((pokemon) => ({
-      ...pokemon, // 기존 정보는 그대로 유지
-      types: pokemonTypes[pokemon.id] || [], // 타입 정보가 없으면 빈 배열 사용
-    }));
-
-    return pokemonTypes;
-  } catch (error) {
-    // 에러가 발생하면 빈 객체를 반환합니다
-    return {};
-  }
-};
-
-/**
- * 모든 포켓몬 데이터를 순차적으로 로딩하는 통합 함수
- * 기본 정보 → 한국어 이름 → 타입 정보 순서로 데이터를 가져와서 완성합니다
- * @returns {Array} 완성된 포켓몬 데이터 배열
+ * 모든 포켓몬 데이터를 가져오는 메인 함수
+ * 1세대 포켓몬 151마리의 기본 정보와 한국어 이름을 가져옵니다.
+ *
+ * @returns {Promise<Array>} 포켓몬 데이터 배열
+ * @throws {Error} API 호출 실패 시 에러 발생
  */
 export const loadAllPokemonData = async () => {
   try {
-    // 1단계: 포켓몬의 기본 정보를 먼저 가져옵니다 (이름, ID, 이미지)
-    await fetchPokestore();
+    // 1세대 포켓몬만 가져오기 (1-151번)
+    const response = await pokeApiInstance.get("/pokemon?limit=151");
+    const pokemonList = response.data.results;
 
-    // 2단계: 포켓몬의 한국어 이름을 가져와서 추가합니다
-    await fetchKoreanNames();
+    // 각 포켓몬의 상세 정보를 병렬로 가져오기 (성능 최적화)
+    const pokemonDetails = await Promise.all(
+      pokemonList.map(async (pokemon) => {
+        try {
+          const detailResponse = await pokeApiInstance.get(pokemon.url);
+          const data = detailResponse.data;
 
-    // 3단계: 포켓몬의 타입 정보를 가져와서 추가합니다
-    await fetchPokemonTypes();
+          // 포켓몬 기본 정보 구성
+          const pokemonData = {
+            id: data.id, // 포켓몬 ID
+            name: data.name, // 영어 이름
+            koreanName: null, // 한국어 이름 (별도로 가져올 예정)
+            image: data.sprites.other["official-artwork"].front_default, // 공식 일러스트
+            types: data.types.map((type) => type.type.name), // 타입 배열
+          };
 
-    // 모든 데이터가 완성된 포켓몬 배열을 반환합니다
-    return arrPokemon;
+          return pokemonData;
+        } catch (error) {
+          console.error(
+            `포켓몬 ${pokemon.name} 상세 정보를 가져오는데 실패:`,
+            error
+          );
+          return null; // 실패한 포켓몬은 null로 처리
+        }
+      })
+    );
+
+    // null 값 제거 (실패한 API 호출 결과)
+    const validPokemon = pokemonDetails.filter((pokemon) => pokemon !== null);
+
+    // 한국어 이름 가져오기
+    const pokemonWithKoreanNames = await loadKoreanNames(validPokemon);
+
+    return pokemonWithKoreanNames;
   } catch (error) {
-    // 에러가 발생하면 빈 배열을 반환합니다
-    return [];
+    console.error("포켓몬 데이터를 가져오는데 실패했습니다:", error);
+    throw error;
   }
 };
 
-// 페이지가 로드될 때 자동으로 모든 포켓몬 데이터를 가져옵니다
-loadAllPokemonData();
+/**
+ * 포켓몬 타입 정보를 가져오는 함수
+ * 모든 포켓몬 타입의 정보와 한국어 이름을 가져옵니다.
+ *
+ * @returns {Promise<Array>} 타입 정보 배열
+ * @throws {Error} API 호출 실패 시 에러 발생
+ */
+export const loadPokemonTypes = async () => {
+  try {
+    const response = await pokeApiInstance.get("/type");
+    const types = response.data.results;
+
+    // 각 타입의 상세 정보를 병렬로 가져오기
+    const typeDetails = await Promise.all(
+      types.map(async (type) => {
+        try {
+          const typeResponse = await pokeApiInstance.get(type.url);
+          const typeData = typeResponse.data;
+
+          return {
+            id: typeData.id,
+            name: typeData.name,
+            koreanName:
+              typeData.names.find((name) => name.language.name === "ko")
+                ?.name || typeData.name, // 한국어 이름이 없으면 영어 이름 사용
+          };
+        } catch (error) {
+          console.error(`타입 ${type.name} 정보를 가져오는데 실패:`, error);
+          // 실패 시 URL에서 ID 추출하여 기본값 반환
+          return {
+            id: type.url.split("/").slice(-2, -1)[0],
+            name: type.name,
+            koreanName: type.name,
+          };
+        }
+      })
+    );
+
+    return typeDetails;
+  } catch (error) {
+    console.error("타입 정보를 가져오는데 실패했습니다:", error);
+    throw error;
+  }
+};

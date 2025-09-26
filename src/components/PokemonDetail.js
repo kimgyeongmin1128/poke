@@ -3,13 +3,13 @@ import PokemonDetailHeader from "./PokemonDetailHeader";
 import PokemonBasicInfo from "./PokemonBasicInfo";
 import PokemonStats from "./PokemonStats";
 import PokemonAbilities from "./PokemonAbilities";
+import PokemonMoves from "./PokemonMoves";
+import { useModal } from "../hooks/useModal";
 
-const PokemonDetail = ({
-  selectedPokemon,
-  pokemonDetails,
-  statKoreanMap,
-  abilityKoreanMap,
-}) => {
+const PokemonDetail = ({ statKoreanMap, abilityKoreanMap }) => {
+  const { selectedPokemon, pokemonDetails, pokemonMoves, loadingMoves } =
+    useModal();
+
   return (
     <div className="pokemon-detail">
       <PokemonDetailHeader selectedPokemon={selectedPokemon} />
@@ -29,6 +29,11 @@ const PokemonDetail = ({
           <PokemonAbilities
             pokemonDetails={pokemonDetails}
             abilityKoreanMap={abilityKoreanMap}
+          />
+
+          <PokemonMoves
+            pokemonMoves={pokemonMoves}
+            loadingMoves={loadingMoves}
           />
         </div>
       )}

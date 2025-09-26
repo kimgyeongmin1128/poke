@@ -1,20 +1,16 @@
 import React from "react";
 import PokemonDetail from "./PokemonDetail";
+import { useModal } from "../hooks/useModal";
 
-const PokemonModal = ({
-  showModal,
-  selectedPokemon,
-  pokemonDetails,
-  statKoreanMap,
-  abilityKoreanMap,
-  onClose,
-}) => {
+const PokemonModal = ({ statKoreanMap, abilityKoreanMap }) => {
+  const { showModal, selectedPokemon, pokemonDetails, closeModal } = useModal();
+
   if (!showModal || !selectedPokemon) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={closeModal}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
+        <button className="modal-close" onClick={closeModal}>
           ×
         </button>
         <PokemonDetail
