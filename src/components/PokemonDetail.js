@@ -2,6 +2,7 @@ import React from "react";
 import PokemonDetailHeader from "./PokemonDetailHeader";
 import PokemonBasicInfo from "./PokemonBasicInfo";
 import PokemonStats from "./PokemonStats";
+import SkeletonDetail from "./SkeletonDetail";
 import PokemonAbilities from "./PokemonAbilities";
 import PokemonMoves from "./PokemonMoves";
 import { useModal } from "../hooks/useModal";
@@ -14,7 +15,9 @@ const PokemonDetail = ({ statKoreanMap, abilityKoreanMap }) => {
     <div className="pokemon-detail">
       <PokemonDetailHeader selectedPokemon={selectedPokemon} />
 
-      {pokemonDetails && (
+      {!pokemonDetails ? (
+        <SkeletonDetail />
+      ) : (
         <div className="pokemon-detail-stats">
           <h3>기본 정보</h3>
           <PokemonBasicInfo pokemonDetails={pokemonDetails} />
