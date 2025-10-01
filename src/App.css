@@ -512,17 +512,19 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px; /* 작은 화면에서 안전 패딩 확보 */
   z-index: 1000;
-  padding: 20px;
 }
 
 .modal-content {
   background: white;
   border-radius: 20px;
   padding: 30px;
-  max-width: 600px;
-  max-height: 80vh;
-  overflow-y: auto;
+  width: min(960px, 95vw);
+  height: min(90vh, 900px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 내부 스크롤로 전환 */
   position: relative;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
@@ -545,6 +547,10 @@ a {
 
 .pokemon-detail {
   text-align: center;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .pokemon-detail-header {

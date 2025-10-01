@@ -21,7 +21,7 @@
  * - PokemonDetail: 포켓몬 상세 정보 표시
  * - PokemonMoves: 포켓몬 기술 목록 표시
  */
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useRef } from "react";
 import pokeApiInstance from "../api/axiosInstance";
 
 // ModalContext의 초기 상태 정의
@@ -42,6 +42,8 @@ const ModalContext = createContext(initialState);
 export const ModalProvider = ({ children }) => {
   // useState로 모달 상태 관리
   const [state, setState] = useState(initialState);
+  // 배경 스크롤 잠금을 위한 스크롤 위치 저장
+  const scrollYRef = useRef(0);
 
   // 포켓몬 기술 정보를 API에서 가져오는 함수
   const loadPokemonMoves = async (pokemon) => {
@@ -124,6 +126,15 @@ export const ModalProvider = ({ children }) => {
 
   // 모달을 열고 포켓몬 상세 정보를 로드하는 함수
   const openModal = async (pokemon) => {
+    // 배경 스크롤 잠금 (iOS 포함 대응)
+    scrollYRef.current = window.scrollY || window.pageYOffset;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollYRef.current}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflow = "hidden";
+    document.body.style.width = "100%";
+
     // 모달 열기 상태로 설정
     setState((prev) => ({
       ...prev,
@@ -180,6 +191,15 @@ export const ModalProvider = ({ children }) => {
 
   // 모달을 닫고 모든 상태를 초기화하는 함수
   const closeModal = () => {
+    // 배경 스크롤 잠금 해제 및 위치 복원
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.overflow = "";
+    document.body.style.width = "";
+    window.scrollTo(0, scrollYRef.current || 0);
+
     setState((prev) => ({
       ...prev,
       showModal: false, // 모달 숨김

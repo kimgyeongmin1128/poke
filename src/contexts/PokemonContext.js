@@ -14,7 +14,13 @@
  * - PokemonGrid: 포켓몬 목록 표시
  * - SearchContext: 검색 기능에서 포켓몬 데이터 사용
  */
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import { loadAllPokemonData } from "../api/pokestore";
 
 // PokemonContext의 초기 상태 정의
@@ -32,6 +38,8 @@ const PokemonContext = createContext(initialState);
 export const PokemonProvider = ({ children }) => {
   // useState로 상태 관리 - 초기값은 initialState
   const [state, setState] = useState(initialState);
+  // StrictMode로 인한 중복 마운트에서도 한 번만 호출되도록 가드
+  const didFetchRef = useRef(false);
 
   // 포켓몬 데이터를 API에서 가져오는 함수
   const loadPokemonData = async () => {
@@ -70,6 +78,8 @@ export const PokemonProvider = ({ children }) => {
 
   // 컴포넌트가 마운트될 때 포켓몬 데이터 로드
   useEffect(() => {
+    if (didFetchRef.current) return;
+    didFetchRef.current = true;
     loadPokemonData();
   }, []); // 빈 의존성 배열 = 컴포넌트 마운트 시 한 번만 실행
 
