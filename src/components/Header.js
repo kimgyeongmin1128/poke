@@ -6,9 +6,9 @@ import {
   CreditCard,
   TvMinimalPlay,
   Store,
-  Book,
-  Search,
-  User,
+  // Book,
+  // Search,
+  // User,
 } from "lucide-react";
 
 const Header = () => {
@@ -47,7 +47,7 @@ const Header = () => {
           </a>
         </li>
       </ul>
-      <div className="nav-search-container">
+      {/* <div className="nav-search-container">
         <ul className="nav-search-list">
           <li>
             <a href="pokebooks.tsx">
@@ -68,7 +68,7 @@ const Header = () => {
             </a>
           </li>
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 };

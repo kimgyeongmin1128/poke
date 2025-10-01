@@ -15,13 +15,23 @@ body {
 .logo-container {
   display: flex;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-bottom: 2px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 12px 20px;
+  min-height: 70px;
 }
 
 .logo-container img {
-  width: 150px;
-  height: 50px;
-  margin-right: 12rem;
-  margin-left: 18rem;
+  width: 160px;
+  height: 55px;
+  margin: 0;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 ul {
   list-style: none;
@@ -47,6 +57,10 @@ a {
   display: flex;
   gap: 8px;
   margin-left: 1rem;
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow-x: hidden;
+  justify-content: center;
 }
 .nav-list li {
   transition: background-color 240ms ease;
@@ -56,81 +70,108 @@ a {
   align-items: center;
   flex-direction: column;
   gap: 6px;
-  transition: color 240ms ease;
+  transition: all 240ms ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  color: #374151;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .nav-icon {
-  color: #ccc;
-  width: 18px;
-  height: 18px;
+  color: #6b7280;
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
-.nav-list li:nth-child(1):hover,
-.nav-list li:nth-child(1):active,
-.nav-list li:nth-child(1):focus-within {
+.nav-list li:nth-child(1):hover a,
+.nav-list li:nth-child(1):active a,
+.nav-list li:nth-child(1):focus-within a {
   background-color: #ff3b30;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 59, 48, 0.3);
 }
 
-.nav-list li:nth-child(2):hover,
-.nav-list li:nth-child(2):active,
-.nav-list li:nth-child(2):focus-within {
+.nav-list li:nth-child(2):hover a,
+.nav-list li:nth-child(2):active a,
+.nav-list li:nth-child(2):focus-within a {
   background-color: #ff9500;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 149, 0, 0.3);
 }
 
-.nav-list li:nth-child(3):hover,
-.nav-list li:nth-child(3):active,
-.nav-list li:nth-child(3):focus-within {
+.nav-list li:nth-child(3):hover a,
+.nav-list li:nth-child(3):active a,
+.nav-list li:nth-child(3):focus-within a {
   background-color: #ffcc00;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 204, 0, 0.3);
 }
 
-.nav-list li:nth-child(4):hover,
-.nav-list li:nth-child(4):active,
-.nav-list li:nth-child(4):focus-within {
+.nav-list li:nth-child(4):hover a,
+.nav-list li:nth-child(4):active a,
+.nav-list li:nth-child(4):focus-within a {
   background-color: #34c759;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 199, 89, 0.3);
 }
 
-.nav-list li:nth-child(5):hover,
-.nav-list li:nth-child(5):active,
-.nav-list li:nth-child(5):focus-within {
+.nav-list li:nth-child(5):hover a,
+.nav-list li:nth-child(5):active a,
+.nav-list li:nth-child(5):focus-within a {
   background-color: #007aff;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
 }
 
-.nav-search-container {
-  margin-left: 1rem;
-}
-.nav-search-icon {
-  width: 25px;
-  height: 25px;
-  color: #000;
-}
-.nav-search-list li a {
-  display: inline-flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 3px;
-}
 .search-container-title {
   font-size: 25px;
   font-weight: 800;
   color: #ffffff;
 }
 .search-container {
-  width: 96.5%;
+  width: 100%;
+  max-width: 100%;
   height: 100%;
-  background-color: #393939;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
   display: flex;
   align-items: center;
-  padding: 20px 40px;
+  padding: 20px;
   gap: 20px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid #4b5563;
 }
 .search-container input {
-  width: 90%;
-  height: 30px;
+  width: 100%;
+  max-width: 100%;
+  height: 40px;
   padding: 12px 16px;
-  background-color: #0e0e0e;
+  background-color: #111827;
   color: #ffffff;
-  border: none;
-  border-radius: 8px;
+  border: 2px solid #4b5563;
+  border-radius: 12px;
   font-size: 16px;
+  box-sizing: border-box;
+  flex: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 240ms ease;
+}
+
+.search-container input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 .search-icon {
   height: 100%;
@@ -198,6 +239,170 @@ a {
   font-size: 18px;
   color: #666;
   padding: 40px;
+}
+
+/* 스켈레톤 UI */
+.skeleton-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-image {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 8px;
+  margin: 0 auto 10px auto;
+}
+
+.skeleton-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.skeleton-name {
+  width: 80px;
+  height: 20px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-id {
+  width: 40px;
+  height: 16px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-english-name {
+  width: 60px;
+  height: 14px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-types {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.skeleton-type {
+  width: 40px;
+  height: 20px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 10px;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 기술용 스켈레톤 UI */
+.skeleton-move-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-move-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.skeleton-move-name {
+  width: 120px;
+  height: 20px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-move-type {
+  width: 60px;
+  height: 24px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 12px;
+}
+
+.skeleton-move-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.skeleton-move-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skeleton-stat-label {
+  width: 40px;
+  height: 14px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 3px;
+}
+
+.skeleton-stat-value {
+  width: 30px;
+  height: 14px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 3px;
+}
+
+.skeleton-move-description {
+  width: 100%;
+  height: 16px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 4px;
 }
 
 .no-results {
@@ -581,151 +786,763 @@ a {
   border-top: 1px solid #e2e8f0;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  /* Header/Nav 모바일 정리 */
+/* 반응형 디자인 - Tailwind CSS 브레이크포인트 기반 */
+
+/* 기본 모바일 스타일 (640px 이하) */
+@media (max-width: 935px) {
   .logo-container {
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     gap: 8px;
-    padding: 8px 0;
-  }
-  .logo-container ul {
-    margin: 0;
-    padding: 0;
-  }
-  .logo-container li {
-    margin: 0 4px 6px 0;
-    padding: 6px;
-  }
-  .logo-container a {
-    margin: 0 8px;
-    font-size: 14px;
-  }
-  .nav-list,
-  .nav-search-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .nav-icon {
-    width: 16px;
-    height: 16px;
-  }
-  .nav-search-container {
-    margin-left: 0;
+    padding: 8px 12px;
+    max-height: none;
+    min-height: 60px;
     width: 100%;
-  }
-  .app-container {
-    padding: 0 12px;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border-bottom: 2px solid #e5e7eb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    visibility: visible;
+    opacity: 1;
+    flex-wrap: nowrap;
   }
 
   .logo-container img {
-    width: 120px;
-    height: 40px;
+    width: 80px;
+    height: 30px;
     margin: 0;
+    flex-shrink: 0;
+    display: block;
+    visibility: visible;
+  }
+
+  .nav-list {
+    display: flex !important;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    max-width: 100%;
+    overflow-x: hidden;
+    visibility: visible;
+    opacity: 1;
+    min-height: 40px;
+    flex: 1;
+  }
+
+  .nav-list li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-list li a {
+    display: flex !important;
+    align-items: center;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 4px 6px;
+    font-size: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #374151;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    visibility: visible;
+    opacity: 1;
+    min-width: 35px;
+    min-height: 30px;
+    flex-shrink: 0;
+  }
+
+  .nav-icon {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    display: block;
+    visibility: visible;
   }
 
   .search-container {
+    padding: 4px 8px;
+    gap: 4px;
     width: 100%;
-    padding: 12px 16px;
-    gap: 12px;
+    max-width: 100%;
+    overflow-x: visible;
+    box-sizing: border-box;
+    display: flex !important;
+    visibility: visible;
+    opacity: 1;
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #4b5563;
+    min-height: 35px;
   }
+
   .search-container input {
+    height: 28px;
+    font-size: 10px;
+    padding: 4px 8px;
     width: 100%;
-    height: 36px;
-    font-size: 14px;
+    display: block;
+    visibility: visible;
+    background-color: #111827;
+    color: #ffffff;
+    border: 2px solid #4b5563;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 스켈레톤 UI 모바일 */
+  .skeleton-card {
+    padding: 6px;
+  }
+
+  .skeleton-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .skeleton-name {
+    width: 60px;
+    height: 12px;
+  }
+
+  .skeleton-id {
+    width: 30px;
+    height: 10px;
+  }
+
+  .skeleton-english-name {
+    width: 40px;
+    height: 8px;
+  }
+
+  .skeleton-type {
+    width: 25px;
+    height: 16px;
+  }
+
+  /* 기술용 스켈레톤 UI 모바일 */
+  .skeleton-move-card {
+    padding: 8px;
+  }
+
+  .skeleton-move-name {
+    width: 80px;
+    height: 16px;
+  }
+
+  .skeleton-move-type {
+    width: 40px;
+    height: 18px;
+  }
+
+  .skeleton-move-stats {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .skeleton-stat-label {
+    width: 30px;
+    height: 12px;
+  }
+
+  .skeleton-stat-value {
+    width: 20px;
+    height: 12px;
+  }
+
+  .skeleton-move-description {
+    height: 12px;
   }
 
   .pokemon-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
-    padding: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .pokemon-card {
+    padding: 6px;
+  }
+
+  .pokemon-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .pokemon-name {
+    font-size: 12px;
+    margin: 4px 0 2px 0;
+  }
+
+  .pokemon-id {
+    font-size: 10px;
+    margin: 2px 0;
+  }
+
+  .pokemon-english-name {
+    font-size: 8px;
+    margin: 2px 0;
+  }
+
+  .pokemon-type {
+    padding: 2px 4px;
+    font-size: 8px;
+    border-radius: 8px;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    padding: 8px;
   }
 
   .pokemon-detail-header {
     flex-direction: column;
-    gap: 16px;
-  }
-  .pokemon-detail-image {
-    width: 140px;
-    height: 140px;
-  }
-  .pokemon-detail-name {
-    font-size: 24px;
-  }
-  .pokemon-detail-id {
-    font-size: 14px;
-  }
-  .pokemon-basic-info {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    text-align: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
   }
 
-  .modal-content {
-    width: 100%;
-    max-width: 95%;
-    padding: 16px;
-    border-radius: 12px;
+  .pokemon-detail-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .pokemon-detail-name {
+    font-size: 18px;
+    margin: 0 0 6px 0;
+  }
+
+  .pokemon-detail-id {
+    font-size: 12px;
+    margin: 0 0 8px 0;
+  }
+
+  .pokemon-detail-types {
+    gap: 4px;
+  }
+
+  .pokemon-basic-info {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .info-item {
+    padding: 6px;
+  }
+
+  .info-label {
+    font-size: 12px;
+  }
+
+  .info-value {
+    font-size: 14px;
+  }
+
+  .pokemon-detail-stats h3 {
+    font-size: 16px;
+    margin: 16px 0 8px 0;
+  }
+
+  .stat-item {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .stat-name {
+    min-width: 60px;
+    font-size: 12px;
+  }
+
+  .stat-bar {
+    height: 16px;
+  }
+
+  .stat-value {
+    min-width: 30px;
+    font-size: 12px;
+  }
+
+  .ability-tag {
+    padding: 4px 8px;
+    font-size: 10px;
   }
 
   .moves-grid {
     grid-template-columns: 1fr;
-    max-height: 300px;
+    max-height: 200px;
+    gap: 8px;
+  }
+
+  .move-card {
+    padding: 6px;
+  }
+
+  .move-name {
+    font-size: 12px;
+  }
+
+  .move-english-name {
+    font-size: 10px;
+  }
+
+  .move-type {
+    padding: 2px 4px;
+    font-size: 8px;
   }
 
   .move-stats {
     grid-template-columns: 1fr;
+    gap: 3px;
+    margin-bottom: 6px;
   }
 
-  .move-name {
-    font-size: 15px;
+  .move-stat {
+    font-size: 10px;
   }
+
   .move-description {
-    word-break: break-word;
+    font-size: 10px;
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  .pokemon-moves h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  /* Header/Nav 태블릿 정리 */
+/* Tailwind sm 브레이크포인트 (640px 이상) */
+@media (min-width: 640px) {
   .logo-container {
-    justify-content: space-between;
-    gap: 8px;
-    padding: 8px 12px;
-  }
-  .logo-container img {
-    width: 120px;
-    height: 40px;
-    margin-right: 0;
-    margin-left: 0;
-  }
-  .nav-list {
-    gap: 6px;
-    flex-wrap: nowrap;
-  }
-  .nav-list li a {
-    margin: 0 6px;
-    font-size: 14px;
+    display: flex;
     flex-direction: row;
-    gap: 6px;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 20px;
+    max-height: 80px;
+    min-height: 70px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: visible;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border-bottom: 2px solid #e5e7eb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 20px;
   }
-  .nav-icon {
-    width: 14px;
-    height: 14px;
+
+  .logo-container img {
+    width: 160px;
+    height: 55px;
+    margin: 0;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
-  .nav-search-container {
-    margin-left: auto;
+
+  .nav-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    max-width: 100%;
+    overflow-x: visible;
+    justify-content: center;
   }
-  .nav-search-list {
-    gap: 6px;
-  }
-  .nav-search-list li a {
+
+  .nav-list li a {
+    display: flex;
+    align-items: center;
     flex-direction: row;
     gap: 6px;
     margin: 0 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #374151;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: #6b7280;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
+
+  .search-container {
+    padding: 16px 24px;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .search-container input {
+    height: 38px;
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+
+  /* 스켈레톤 UI 태블릿/데스크톱 */
+  .skeleton-card {
+    padding: 16px;
+  }
+
+  .skeleton-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .skeleton-name {
+    width: 100px;
+    height: 18px;
+  }
+
+  .skeleton-id {
+    width: 50px;
+    height: 14px;
+  }
+
+  .skeleton-english-name {
+    width: 80px;
+    height: 12px;
+  }
+
+  .skeleton-type {
+    width: 50px;
+    height: 20px;
+  }
+
+  /* 기술용 스켈레톤 UI 태블릿/데스크톱 */
+  .skeleton-move-card {
+    padding: 16px;
+  }
+
+  .skeleton-move-name {
+    width: 120px;
+    height: 20px;
+  }
+
+  .skeleton-move-type {
+    width: 60px;
+    height: 24px;
+  }
+
+  .skeleton-move-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .skeleton-stat-label {
+    width: 40px;
+    height: 14px;
+  }
+
+  .skeleton-stat-value {
+    width: 30px;
+    height: 14px;
+  }
+
+  .skeleton-move-description {
+    height: 16px;
+  }
+
+  .pokemon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .pokemon-card {
+    padding: 16px;
+  }
+
+  .pokemon-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .pokemon-name {
+    font-size: 18px;
+  }
+
+  .pokemon-id {
     font-size: 14px;
   }
+
+  .pokemon-english-name {
+    font-size: 12px;
+  }
+
   .modal-content {
-    max-width: 720px;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 20px;
+    height: auto;
+    max-height: 80vh;
+  }
+
+  .pokemon-detail-header {
+    flex-direction: row;
+    text-align: left;
+    gap: 30px;
+  }
+
+  .pokemon-detail-image {
+    width: 200px;
+    height: 200px;
+  }
+
+  .pokemon-detail-name {
+    font-size: 32px;
+  }
+
+  .pokemon-detail-id {
+    font-size: 18px;
+  }
+
+  .pokemon-basic-info {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .moves-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    max-height: 400px;
+  }
+
+  .move-card {
+    padding: 12px;
+  }
+
+  .move-name {
+    font-size: 16px;
+  }
+
+  .move-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+}
+
+/* Tailwind xl 브레이크포인트 (1280px 이상) */
+@media (min-width: 1280px) {
+  .logo-container {
+    padding: 16px 32px;
+    max-height: 90px;
+    min-height: 80px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: visible;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border-bottom: 2px solid #e5e7eb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 24px;
+  }
+
+  .logo-container img {
+    width: 180px;
+    height: 60px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+
+  .nav-list {
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .nav-list li a {
+    font-size: 16px;
+    margin: 0 8px;
+    padding: 10px 14px;
+    flex-shrink: 0;
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .search-container {
+    padding: 24px 48px;
+    gap: 24px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .search-container input {
+    height: 48px;
+    font-size: 18px;
+    padding: 16px 20px;
+  }
+
+  /* 스켈레톤 UI 대형 데스크톱 */
+  .skeleton-card {
+    padding: 20px;
+  }
+
+  .skeleton-image {
+    width: 140px;
+    height: 140px;
+  }
+
+  .skeleton-name {
+    width: 120px;
+    height: 22px;
+  }
+
+  .skeleton-id {
+    width: 60px;
+    height: 16px;
+  }
+
+  .skeleton-english-name {
+    width: 100px;
+    height: 14px;
+  }
+
+  .skeleton-type {
+    width: 60px;
+    height: 24px;
+  }
+
+  /* 기술용 스켈레톤 UI 대형 데스크톱 */
+  .skeleton-move-card {
+    padding: 20px;
+  }
+
+  .skeleton-move-name {
+    width: 140px;
+    height: 22px;
+  }
+
+  .skeleton-move-type {
+    width: 70px;
+    height: 28px;
+  }
+
+  .skeleton-move-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .skeleton-stat-label {
+    width: 50px;
+    height: 16px;
+  }
+
+  .skeleton-stat-value {
+    width: 40px;
+    height: 16px;
+  }
+
+  .skeleton-move-description {
+    height: 18px;
+  }
+
+  .pokemon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .pokemon-card {
+    padding: 20px;
+  }
+
+  .pokemon-image {
+    width: 140px;
+    height: 140px;
+  }
+
+  .pokemon-name {
+    font-size: 20px;
+  }
+
+  .pokemon-id {
+    font-size: 16px;
+  }
+
+  .pokemon-english-name {
+    font-size: 14px;
+  }
+
+  .modal-content {
+    max-width: 800px;
+    padding: 40px;
+  }
+
+  .pokemon-detail-header {
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .pokemon-detail-image {
+    width: 250px;
+    height: 250px;
+  }
+
+  .pokemon-detail-name {
+    font-size: 36px;
+  }
+
+  .pokemon-detail-id {
+    font-size: 20px;
+  }
+
+  .pokemon-basic-info {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .moves-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    max-height: 500px;
+  }
+
+  .move-card {
+    padding: 16px;
+  }
+
+  .move-name {
+    font-size: 18px;
+  }
+
+  .move-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }

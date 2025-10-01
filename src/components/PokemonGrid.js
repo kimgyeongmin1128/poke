@@ -21,7 +21,8 @@
  */
 import React from "react";
 import PokemonCard from "./PokemonCard";
-import LoadingSpinner from "./LoadingSpinner";
+// import LoadingSpinner from "./LoadingSpinner";
+import SkeletonCard from "./SkeletonCard";
 import NoResults from "./NoResults";
 import { TYPE_KOREAN_MAP } from "../constants/translations";
 import { usePokemon } from "../hooks/usePokemon";
@@ -38,8 +39,8 @@ const PokemonGrid = () => {
     <div className="pokemon-grid">
       {/* 조건부 렌더링 - 상태에 따라 다른 컴포넌트 표시 */}
       {loading ? (
-        // 로딩 중일 때 스피너 표시
-        <LoadingSpinner />
+        // 로딩 중일 때 스켈레톤 UI 표시
+        Array.from({ length: 12 }, (_, index) => <SkeletonCard key={index} />)
       ) : filteredPokemon.length === 0 ? (
         // 검색 결과가 없을 때 NoResults 표시
         <NoResults />

@@ -23,6 +23,7 @@
  * - loadingMoves: 기술 로딩 상태
  */
 import React from "react";
+import SkeletonMove from "./SkeletonMove";
 import {
   TYPE_KOREAN_MAP,
   MOVE_CATEGORY_KOREAN_MAP,
@@ -31,12 +32,16 @@ import {
 } from "../constants/translations";
 
 const PokemonMoves = ({ pokemonMoves, loadingMoves }) => {
-  // 기술 로딩 중일 때 표시
+  // 기술 로딩 중일 때 스켈레톤 UI 표시
   if (loadingMoves) {
     return (
       <div className="pokemon-moves">
         <h3>기술</h3>
-        <div className="moves-loading">기술 정보를 불러오는 중...</div>
+        <div className="moves-grid">
+          {Array.from({ length: 6 }, (_, index) => (
+            <SkeletonMove key={index} />
+          ))}
+        </div>
       </div>
     );
   }

@@ -28,7 +28,7 @@ export let arrPokemon = [];
 /**
  * 가져올 포켓몬의 개수를 설정하는 상수 (axios 사용)
  */
-const fetchNum = 300;
+const fetchNum = 500;
 
 /**
  * 포켓몬의 기본 정보를 가져오는 함수
@@ -76,7 +76,7 @@ export const loadKoreanNames = async (pokemonList) => {
   try {
     // 포켓몬 종류 정보 가져오기 (한국어 이름 포함)
     const speciesResponse = await pokeApiInstance.get(
-      "/pokemon-species?limit=151"
+      `/pokemon-species?limit=${fetchNum}`
     );
     const speciesList = speciesResponse.data.results;
 
@@ -94,7 +94,7 @@ export const loadKoreanNames = async (pokemonList) => {
 
           return {
             id: speciesData.id,
-            koreanName: koreanName || speciesData.name, // 한국어 이름이 없으면 영어 이름 사용
+            koreanName: koreanName || null, // 한국어 이름이 없으면 null로 표시
           };
         } catch (error) {
           console.error(
@@ -131,15 +131,15 @@ export const loadKoreanNames = async (pokemonList) => {
 
 /**
  * 모든 포켓몬 데이터를 가져오는 메인 함수
- * 1세대 포켓몬 151마리의 기본 정보와 한국어 이름을 가져옵니다.
+ * 설정된 개수만큼 포켓몬의 기본 정보와 한국어 이름을 가져옵니다.
  *
  * @returns {Promise<Array>} 포켓몬 데이터 배열
  * @throws {Error} API 호출 실패 시 에러 발생
  */
 export const loadAllPokemonData = async () => {
   try {
-    // 1세대 포켓몬만 가져오기 (1-151번)
-    const response = await pokeApiInstance.get("/pokemon?limit=151");
+    // 설정된 개수만큼 포켓몬 가져오기
+    const response = await pokeApiInstance.get(`/pokemon?limit=${fetchNum}`);
     const pokemonList = response.data.results;
 
     // 각 포켓몬의 상세 정보를 병렬로 가져오기 (성능 최적화)
