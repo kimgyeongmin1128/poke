@@ -44,6 +44,7 @@ const TypeFilter = () => {
   const { searchTerm } = useSearch();
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [filteredPokemon, setFilteredPokemon] = useState([]);
+  const [isOpen, setIsOpen] = useState(false); // 토글 상태
 
   // 타입 선택/해제 핸들러
   const handleTypeToggle = (typeId) => {
@@ -96,41 +97,49 @@ const TypeFilter = () => {
 
   return (
     <div className="type-filter">
-      <div className="type-filter-title">타입별 필터</div>
-      <div className="type-buttons">
-        {POKEMON_TYPES.map((type) => (
-          <button
-            key={type.id}
-            className={`type-button ${
-              selectedTypes.includes(type.id) ? "active" : ""
-            }`}
-            onClick={() => handleTypeToggle(type.id)}
-            style={{
-              backgroundColor: selectedTypes.includes(type.id)
-                ? type.color
-                : "#f3f4f6",
-              color: selectedTypes.includes(type.id) ? "#ffffff" : "#374151",
-              borderColor: type.color,
-            }}
-          >
-            {type.name}
-          </button>
-        ))}
-      </div>
-      {selectedTypes.length > 0 && (
-        <div className="filter-info">
-          <span>
-            선택된 타입: {selectedTypes.length}개 (모든 타입을 가진 포켓몬만
-            표시)
-          </span>
-          <button
-            className="clear-filter-btn"
-            onClick={() => setSelectedTypes([])}
-          >
-            필터 초기화
-          </button>
+      <div className="type-filter-header" onClick={() => setIsOpen(!isOpen)}>
+        <div className="type-filter-title">타입별 필터</div>
+        <div className={`type-filter-toggle ${isOpen ? "open" : ""}`}>
+          {isOpen ? "▼" : "▶"}
         </div>
-      )}
+      </div>
+
+      <div className={`type-filter-content ${isOpen ? "open" : ""}`}>
+        <div className="type-buttons">
+          {POKEMON_TYPES.map((type) => (
+            <button
+              key={type.id}
+              className={`type-button ${
+                selectedTypes.includes(type.id) ? "active" : ""
+              }`}
+              onClick={() => handleTypeToggle(type.id)}
+              style={{
+                backgroundColor: selectedTypes.includes(type.id)
+                  ? type.color
+                  : "#f3f4f6",
+                color: selectedTypes.includes(type.id) ? "#ffffff" : "#374151",
+                borderColor: type.color,
+              }}
+            >
+              {type.name}
+            </button>
+          ))}
+        </div>
+        {selectedTypes.length > 0 && (
+          <div className="filter-info">
+            <span>
+              선택된 타입: {selectedTypes.length}개 (모든 타입을 가진 포켓몬만
+              표시)
+            </span>
+            <button
+              className="clear-filter-btn"
+              onClick={() => setSelectedTypes([])}
+            >
+              필터 초기화
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
