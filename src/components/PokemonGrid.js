@@ -19,7 +19,7 @@
  * - 검색 결과 없음: NoResults 표시
  * - 정상: 포켓몬 카드 그리드 표시
  */
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import PokemonCard from "./PokemonCard";
 // import LoadingSpinner from "./LoadingSpinner";
 import SkeletonCard from "./SkeletonCard";
@@ -32,61 +32,48 @@ const PokemonGrid = () => {
   // PokemonContext에서 포켓몬 데이터와 로딩 상태 가져오기
   const { loading, filteredPokemon } = usePokemon();
   const PAGE_SIZE = 100;
-  const [displayedPokemon, setDisplayedPokemon] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const observerRef = useRef(null);
-  const loadMoreRef = useRef(null);
 
   const total = filteredPokemon.length;
-  const hasMore = displayedPokemon.length < total;
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const currentPokemon = filteredPokemon.slice(startIndex, endIndex);
 
-  // 무한 스크롤을 위한 Intersection Observer 설정
-  const loadMore = useCallback(() => {
-    if (isLoadingMore || !hasMore) return;
+  // 페이지 변경 핸들러
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-    setIsLoadingMore(true);
+  // 페이지 번호 렌더링
+  const renderPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-    // 다음 페이지 데이터 로드
-    setTimeout(() => {
-      const nextPage = currentPage + 1;
-      const start = (nextPage - 1) * PAGE_SIZE;
-      const end = start + PAGE_SIZE;
-      const newPokemon = filteredPokemon.slice(start, end);
-
-      setDisplayedPokemon((prev) => [...prev, ...newPokemon]);
-      setCurrentPage(nextPage);
-      setIsLoadingMore(false);
-    }, 500); // 로딩 효과를 위한 지연
-  }, [currentPage, filteredPokemon, isLoadingMore, hasMore]);
-
-  // Intersection Observer 설정
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
-          loadMore();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    observerRef.current = observer;
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`page-num ${i === currentPage ? "active" : ""}`}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [loadMore, hasMore, isLoadingMore]);
+    return pages;
+  };
 
-  // 검색 결과가 바뀌면 초기화
+  // 필터된 포켓몬이 변경될 때 페이지 초기화
   useEffect(() => {
-    setDisplayedPokemon(filteredPokemon.slice(0, PAGE_SIZE));
     setCurrentPage(1);
   }, [filteredPokemon]);
 
@@ -103,9 +90,9 @@ const PokemonGrid = () => {
         // 검색 결과가 없을 때 NoResults 표시
         <NoResults />
       ) : (
-        // 정상 상태일 때 포켓몬 카드 그리드 표시 (무한 스크롤)
+        // 정상 상태일 때 포켓몬 카드 그리드 표시 (페이지네이션)
         <>
-          {displayedPokemon.map((pokemon) => (
+          {currentPokemon.map((pokemon) => (
             <PokemonCard
               key={pokemon.id} // React key - 고유한 포켓몬 ID
               pokemon={pokemon} // 포켓몬 데이터
@@ -114,28 +101,26 @@ const PokemonGrid = () => {
             />
           ))}
 
-          {/* 무한 스크롤 로딩 영역 */}
-          {hasMore && (
-            <div ref={loadMoreRef} className="load-more-trigger">
-              {isLoadingMore ? (
-                <div className="loading-more">
-                  <div className="loading-spinner"></div>
-                  <span>더 많은 포켓몬을 불러오는 중...</span>
-                </div>
-              ) : (
-                <div className="scroll-hint">
-                  <span>스크롤하여 더 많은 포켓몬 보기</span>
-                </div>
-              )}
-            </div>
-          )}
+          {/* 페이지네이션 컨트롤 */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className="page-btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                이전
+              </button>
 
-          {/* 모든 포켓몬을 로드했을 때 */}
-          {!hasMore && displayedPokemon.length > 0 && (
-            <div className="end-of-list">
-              <span>
-                모든 포켓몬을 불러왔습니다! ({displayedPokemon.length}마리)
-              </span>
+              {renderPageNumbers()}
+
+              <button
+                className="page-btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                다음
+              </button>
             </div>
           )}
         </>
