@@ -29,7 +29,7 @@ export let arrPokemon = [];
 /**
  * 가져올 포켓몬의 개수를 설정하는 상수 (axios 사용)
  */
-const fetchNum = 500;
+const fetchNum = 1000;
 
 /**
  * 포켓몬의 기본 정보를 가져오는 함수
@@ -145,7 +145,9 @@ export const loadAllPokemonData = async () => {
     // 캐시에서 데이터 확인
     const cachedData = apiCache.get(cacheKey);
     if (cachedData) {
-      console.log("포켓몬 데이터를 캐시에서 로드했습니다.");
+      console.log(
+        `포켓몬 데이터를 캐시에서 로드했습니다. (${cachedData.length}마리)`
+      );
       return cachedData;
     }
 
@@ -188,13 +190,25 @@ export const loadAllPokemonData = async () => {
 
     // 결과를 캐시에 저장 (10분 TTL)
     apiCache.set(cacheKey, pokemonWithKoreanNames, 10 * 60 * 1000);
-    console.log("포켓몬 데이터를 캐시에 저장했습니다.");
+    console.log(
+      `포켓몬 데이터를 캐시에 저장했습니다. (${pokemonWithKoreanNames.length}마리)`
+    );
 
     return pokemonWithKoreanNames;
   } catch (error) {
     console.error("포켓몬 데이터를 가져오는데 실패했습니다:", error);
     throw error;
   }
+};
+
+/**
+ * 포켓몬 데이터 캐시를 강제로 초기화하는 함수
+ * fetchNum이 변경되었을 때 이전 캐시를 삭제합니다.
+ */
+export const clearPokemonCache = () => {
+  const cacheKey = `pokemon-list-${fetchNum}`;
+  apiCache.delete(cacheKey);
+  console.log(`포켓몬 캐시를 초기화했습니다. (키: ${cacheKey})`);
 };
 
 /**

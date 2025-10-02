@@ -21,7 +21,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { loadAllPokemonData } from "../api/pokestore";
+import { loadAllPokemonData, clearPokemonCache } from "../api/pokestore";
 
 // PokemonContext의 초기 상태 정의
 const initialState = {
@@ -46,6 +46,9 @@ export const PokemonProvider = ({ children }) => {
     try {
       // 로딩 시작 - 에러 상태 초기화
       setState((prev) => ({ ...prev, loading: true, error: null }));
+
+      // 캐시 초기화 (fetchNum 변경 시 이전 캐시 삭제)
+      clearPokemonCache();
 
       // API에서 모든 포켓몬 데이터 가져오기
       const data = await loadAllPokemonData();
