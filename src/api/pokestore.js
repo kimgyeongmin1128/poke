@@ -18,6 +18,7 @@
  * - /type: 포켓몬 타입 정보
  */
 import pokeApiInstance from "./axiosInstance";
+import { cachedFetch, invalidateCache, apiCache } from "../utils/cache";
 
 /**
  * 포켓몬 데이터를 저장하는 전역 배열
@@ -138,6 +139,16 @@ export const loadKoreanNames = async (pokemonList) => {
  */
 export const loadAllPokemonData = async () => {
   try {
+    // 캐시 키 생성
+    const cacheKey = `pokemon-list-${fetchNum}`;
+
+    // 캐시에서 데이터 확인
+    const cachedData = apiCache.get(cacheKey);
+    if (cachedData) {
+      console.log("포켓몬 데이터를 캐시에서 로드했습니다.");
+      return cachedData;
+    }
+
     // 설정된 개수만큼 포켓몬 가져오기
     const response = await pokeApiInstance.get(`/pokemon?limit=${fetchNum}`);
     const pokemonList = response.data.results;
@@ -175,9 +186,82 @@ export const loadAllPokemonData = async () => {
     // 한국어 이름 가져오기
     const pokemonWithKoreanNames = await loadKoreanNames(validPokemon);
 
+    // 결과를 캐시에 저장 (10분 TTL)
+    apiCache.set(cacheKey, pokemonWithKoreanNames, 10 * 60 * 1000);
+    console.log("포켓몬 데이터를 캐시에 저장했습니다.");
+
     return pokemonWithKoreanNames;
   } catch (error) {
     console.error("포켓몬 데이터를 가져오는데 실패했습니다:", error);
+    throw error;
+  }
+};
+
+/**
+ * 특정 포켓몬의 상세 정보를 가져오는 함수
+ * 포켓몬 ID를 받아서 상세 정보를 반환합니다.
+ *
+ * @param {number} pokemonId - 포켓몬 ID
+ * @returns {Promise<Object>} 포켓몬 상세 정보
+ * @throws {Error} API 호출 실패 시 에러 발생
+ */
+export const loadPokemonDetails = async (pokemonId) => {
+  try {
+    // 캐시 키 생성
+    const cacheKey = `pokemon-details-${pokemonId}`;
+
+    // 캐시에서 데이터 확인
+    const cachedData = apiCache.get(cacheKey);
+    if (cachedData) {
+      console.log(`포켓몬 ${pokemonId} 상세 정보를 캐시에서 로드했습니다.`);
+      return cachedData;
+    }
+
+    // 포켓몬 상세 정보 가져오기
+    const response = await pokeApiInstance.get(`/pokemon/${pokemonId}`);
+    const data = response.data;
+
+    // 포켓몬 상세 정보 구성
+    const pokemonDetails = {
+      id: data.id,
+      name: data.name,
+      koreanName: null, // 한국어 이름은 별도로 가져올 예정
+      image: data.sprites.other["official-artwork"].front_default,
+      types: data.types.map((type) => type.type.name),
+      stats: data.stats,
+      abilities: data.abilities,
+      height: data.height,
+      weight: data.weight,
+    };
+
+    // 한국어 이름 가져오기
+    try {
+      const speciesResponse = await pokeApiInstance.get(
+        `/pokemon-species/${pokemonId}`
+      );
+      const speciesData = speciesResponse.data;
+
+      const koreanName = speciesData.names.find(
+        (name) => name.language.name === "ko"
+      )?.name;
+
+      if (koreanName) {
+        pokemonDetails.koreanName = koreanName;
+      }
+    } catch (error) {
+      console.warn(
+        `포켓몬 ${pokemonId}의 한국어 이름을 가져오는데 실패:`,
+        error
+      );
+    }
+
+    // 결과를 캐시에 저장 (30분 TTL)
+    apiCache.set(cacheKey, pokemonDetails, 30 * 60 * 1000);
+    console.log(`포켓몬 ${pokemonId} 상세 정보를 캐시에 저장했습니다.`);
+
+    return pokemonDetails;
+  } catch (error) {
+    console.error(`포켓몬 ${pokemonId} 상세 정보를 가져오는데 실패:`, error);
     throw error;
   }
 };

@@ -1,15 +1,31 @@
+/* CSS 변수 정의 (다크 모드 고정) */
+:root {
+  --bg-primary: #1f2937;
+  --bg-secondary: #374151;
+  --bg-tertiary: #4b5563;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --border-color: #4b5563;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
 html,
 body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .app-container {
   width: 100%;
   height: 100%;
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease;
 }
 
 .logo-container {
@@ -19,11 +35,12 @@ body {
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
-  background-color: #ffffff;
-  border-bottom: 2px solid #e5e7eb;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-primary);
+  border-bottom: 2px solid var(--border-color);
+  box-shadow: var(--shadow);
   padding: 12px 20px;
   min-height: 70px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .logo-container img {
@@ -44,10 +61,33 @@ li {
 }
 a {
   text-decoration: none;
-  color: #000;
+  color: var(--text-primary);
   font-size: 16px;
   font-weight: 600;
   margin: 0 30px;
+  transition: color 0.3s ease;
+}
+
+/* 테마 토글 버튼 스타일 */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 30px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--bg-secondary);
+  transform: translateY(-1px);
 }
 
 .nav-list {
@@ -227,17 +267,55 @@ a {
 }
 
 .pokemon-card {
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    background-color 0.3s ease, border-color 0.3s ease;
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .pokemon-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+/* 포켓몬 카드 등장 애니메이션 */
+.pokemon-card {
+  animation: cardFadeIn 0.6s ease-out;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 포켓몬 이미지 호버 애니메이션 */
+.pokemon-image {
+  transition: transform 0.3s ease;
+}
+
+.pokemon-card:hover .pokemon-image {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* 포켓몬 이름 호버 애니메이션 */
+.pokemon-name {
+  transition: color 0.3s ease;
+}
+
+.pokemon-card:hover .pokemon-name {
+  color: #3b82f6;
 }
 
 .pokemon-image {
@@ -249,19 +327,34 @@ a {
 
 .pokemon-info {
   text-align: center;
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.6) 50%,
+    transparent 100%
+  );
+  padding: 12px 8px 8px 8px;
+  margin-top: -110px;
+  border-radius: 0 0 12px 12px;
 }
 
 .pokemon-name {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: #ffffff;
   margin: 8px 0 4px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+  line-height: 1.2;
 }
 
 .pokemon-id {
   font-size: 14px;
-  color: #666;
+  color: #ffffff;
   margin: 4px 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+  font-weight: 500;
 }
 
 .pokemon-english-name {
@@ -281,7 +374,8 @@ a {
 
 /* 스켈레톤 UI */
 .skeleton-card {
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -464,7 +558,8 @@ a {
 
 /* 기술용 스켈레톤 UI */
 .skeleton-move-card {
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -564,6 +659,8 @@ a {
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 8px;
+  position: relative;
+  z-index: 3;
 }
 
 .pokemon-type {
@@ -573,7 +670,9 @@ a {
   font-weight: bold;
   text-transform: uppercase;
   color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* 타입별 색상 */
@@ -645,6 +744,16 @@ a {
   align-items: center;
   padding: 20px; /* 작은 화면에서 안전 패딩 확보 */
   z-index: 1000;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-content {
@@ -658,6 +767,18 @@ a {
   overflow: hidden; /* 내부 스크롤로 전환 */
   position: relative;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.4s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .modal-close {
@@ -673,7 +794,7 @@ a {
 }
 
 .modal-close:hover {
-  color: #000;
+  color: var(--text-primary);
 }
 
 .pokemon-detail {
@@ -1682,4 +1803,621 @@ a {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
+}
+
+/* 무한 스크롤 스타일 */
+.load-more-trigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.loading-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #6b7280;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  padding: 12px 24px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.scroll-hint::before {
+  content: "↓";
+  font-size: 16px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
+}
+
+.end-of-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin: 20px 0;
+  color: #6b7280;
+  font-size: 14px;
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+}
+
+/* 검색 섹션 스타일 */
+.search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* 타입 필터 스타일 */
+.type-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.type-filter-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.type-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.type-button {
+  padding: 8px 16px;
+  border: 2px solid;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.type-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.type-button.active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.filter-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.clear-filter-btn {
+  padding: 6px 12px;
+  background-color: #ef4444;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clear-filter-btn:hover {
+  background-color: #dc2626;
+}
+
+/* 포켓몬 비교 기능 스타일 */
+.compare-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.compare-btn:hover:not(.disabled) {
+  background-color: rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.compare-btn.active {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+.compare-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 비교 모달 스타일 */
+.compare-modal {
+  max-width: 1200px;
+  width: 95vw;
+  height: 90vh;
+  max-height: 800px;
+}
+
+.compare-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.compare-modal h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.compare-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.compare-pokemon {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.compare-pokemon-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.compare-pokemon-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.compare-pokemon-info {
+  flex: 1;
+}
+
+.compare-pokemon-name {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.compare-pokemon-id {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.compare-pokemon-types {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.compare-stats h4,
+.compare-abilities h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-name {
+  min-width: 60px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.stat-bar {
+  flex: 1;
+  height: 8px;
+  background-color: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stat-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.stat-value {
+  min-width: 30px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.abilities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ability-item {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.compare-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+  margin-top: 20px;
+}
+
+.clear-compare-btn,
+.close-compare-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-compare-btn {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.clear-compare-btn:hover {
+  background-color: #dc2626;
+}
+
+.close-compare-btn {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.close-compare-btn:hover {
+  background-color: var(--bg-secondary);
+}
+
+.compare-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px;
+  color: var(--text-muted);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .compare-content {
+    grid-template-columns: 1fr;
+  }
+
+  .compare-pokemon-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .compare-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* 지연 로딩 이미지 스타일 */
+.lazy-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lazy-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+}
+
+.lazy-image.loading {
+  opacity: 0;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+.lazy-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+}
+
+.lazy-image-placeholder .loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-color);
+  border-top: 2px solid var(--text-muted);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 접근성 개선 스타일 */
+/* 포커스 표시 */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 키보드 네비게이션을 위한 스킵 링크 */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #3b82f6;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* 스크린 리더 전용 텍스트 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 고대비 모드 지원 */
+@media (prefers-contrast: high) {
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f0f0;
+    --bg-tertiary: #e0e0e0;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --text-muted: #666666;
+    --border-color: #000000;
+  }
+}
+
+/* 애니메이션 감소 설정 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 포켓몬 카드 접근성 개선 */
+.pokemon-card {
+  position: relative;
+}
+
+.pokemon-card:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 버튼 접근성 개선 */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+/* 모달 접근성 개선 */
+.modal-overlay {
+  backdrop-filter: blur(4px);
+}
+
+.modal-content:focus {
+  outline: none;
+}
+
+/* 폼 요소 접근성 개선 */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 링크 접근성 개선 */
+a:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 테이블 접근성 개선 */
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--bg-secondary);
+  font-weight: 600;
+}
+
+/* 리스트 접근성 개선 */
+ul,
+ol {
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* 이미지 접근성 개선 */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 로딩 상태 접근성 개선 */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+.loading-spinner[aria-label] {
+  position: relative;
+}
+
+.loading-spinner[aria-label]::after {
+  content: attr(aria-label);
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }

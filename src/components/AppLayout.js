@@ -25,6 +25,11 @@ import { STAT_KOREAN_MAP, ABILITY_KOREAN_MAP } from "../constants/translations";
 const AppLayout = () => {
   return (
     <div className="app-container">
+      {/* 접근성을 위한 스킵 링크 */}
+      <a href="#main-content" className="skip-link">
+        메인 콘텐츠로 건너뛰기
+      </a>
+
       {/* 상단 헤더 - 로고와 제목 */}
       <Header />
 
@@ -32,7 +37,9 @@ const AppLayout = () => {
       <SearchSection />
 
       {/* 포켓몬 그리드 - 포켓몬 목록 표시 */}
-      <PokemonGrid />
+      <main id="main-content" role="main">
+        <PokemonGrid />
+      </main>
 
       {/* 포켓몬 상세 정보 모달 - 조건부로 표시 */}
       <PokemonModal

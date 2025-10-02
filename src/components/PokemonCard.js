@@ -1,4 +1,5 @@
 import React from "react";
+import LazyImage from "./LazyImage";
 
 const PokemonCard = ({ pokemon, onPokemonClick, typeKoreanMap }) => {
   return (
@@ -6,9 +7,18 @@ const PokemonCard = ({ pokemon, onPokemonClick, typeKoreanMap }) => {
       key={pokemon.id}
       className="pokemon-card"
       onClick={() => onPokemonClick(pokemon)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onPokemonClick(pokemon);
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`${pokemon.koreanName || pokemon.name} 포켓몬 상세 정보 보기`}
       style={{ cursor: "pointer" }}
     >
-      <img
+      <LazyImage
         src={pokemon.image}
         alt={pokemon.koreanName || pokemon.name}
         className="pokemon-image"
