@@ -54,12 +54,12 @@ const TypeFilter = () => {
     );
   };
 
-  // 타입별 필터링 함수
+  // 타입별 필터링 함수 - 선택된 모든 타입을 가진 포켓몬만 표시
   const filterByTypes = (pokemonList, types) => {
     if (types.length === 0) return pokemonList;
 
     return pokemonList.filter((pokemon) =>
-      types.some((type) => pokemon.types.includes(type))
+      types.every((type) => pokemon.types.includes(type))
     );
   };
 
@@ -119,7 +119,10 @@ const TypeFilter = () => {
       </div>
       {selectedTypes.length > 0 && (
         <div className="filter-info">
-          <span>선택된 타입: {selectedTypes.length}개</span>
+          <span>
+            선택된 타입: {selectedTypes.length}개 (모든 타입을 가진 포켓몬만
+            표시)
+          </span>
           <button
             className="clear-filter-btn"
             onClick={() => setSelectedTypes([])}
