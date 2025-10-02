@@ -18,7 +18,13 @@
  * - SearchSection: 검색 입력 필드
  * - PokemonGrid: 필터링된 포켓몬 목록 표시
  */
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { usePokemon } from "./PokemonContext";
 
 // SearchContext의 초기 상태 정의
@@ -48,38 +54,41 @@ export const SearchProvider = ({ children }) => {
   };
 
   // 포켓몬 데이터를 검색어로 필터링하는 함수
-  const filterPokemon = (searchTerm) => {
-    // 검색어가 없으면 전체 데이터 표시
-    if (!searchTerm) {
-      updateFilteredPokemon(pokemonData);
-      return;
-    }
+  const filterPokemon = useCallback(
+    (searchTerm) => {
+      // 검색어가 없으면 전체 데이터 표시
+      if (!searchTerm) {
+        updateFilteredPokemon(pokemonData);
+        return;
+      }
 
-    // 검색어를 소문자로 변환
-    const searchLower = searchTerm.toLowerCase();
+      // 검색어를 소문자로 변환
+      const searchLower = searchTerm.toLowerCase();
 
-    // 포켓몬 데이터를 필터링
-    const filtered = pokemonData.filter((pokemon) => {
-      // 포켓몬의 한국어 이름 또는 영어 이름 가져오기
-      const koreanName = (
-        pokemon.koreanName || // 한국어 이름이 있으면 사용
-        pokemon.name || // 없으면 영어 이름 사용
-        ""
-      ) // 둘 다 없으면 빈 문자열
-        .toLowerCase();
+      // 포켓몬 데이터를 필터링
+      const filtered = pokemonData.filter((pokemon) => {
+        // 포켓몬의 한국어 이름 또는 영어 이름 가져오기
+        const koreanName = (
+          pokemon.koreanName || // 한국어 이름이 있으면 사용
+          pokemon.name || // 없으면 영어 이름 사용
+          ""
+        ) // 둘 다 없으면 빈 문자열
+          .toLowerCase();
 
-      // 검색어가 포켓몬 이름에 포함되어 있는지 확인
-      return koreanName.includes(searchLower);
-    });
+        // 검색어가 포켓몬 이름에 포함되어 있는지 확인
+        return koreanName.includes(searchLower);
+      });
 
-    // 필터링된 결과를 PokemonContext에 전달
-    updateFilteredPokemon(filtered);
-  };
+      // 필터링된 결과를 PokemonContext에 전달
+      updateFilteredPokemon(filtered);
+    },
+    [pokemonData, updateFilteredPokemon]
+  ); // pokemonData와 updateFilteredPokemon을 의존성으로 설정
 
   // 검색어나 포켓몬 데이터가 변경될 때마다 필터링 실행
   useEffect(() => {
     filterPokemon(state.searchTerm);
-  }, [state.searchTerm, pokemonData]); // 의존성 배열: 검색어와 포켓몬 데이터
+  }, [state.searchTerm, filterPokemon]); // 의존성 배열: 검색어와 필터링 함수
 
   // 검색을 초기화하는 함수
   const clearSearch = () => {

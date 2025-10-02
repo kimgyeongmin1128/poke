@@ -20,6 +20,7 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useCallback,
 } from "react";
 import { loadAllPokemonData, clearPokemonCache } from "../api/pokestore";
 
@@ -42,7 +43,7 @@ export const PokemonProvider = ({ children }) => {
   const didFetchRef = useRef(false);
 
   // 포켓몬 데이터를 API에서 가져오는 함수
-  const loadPokemonData = async () => {
+  const loadPokemonData = useCallback(async () => {
     try {
       // 로딩 시작 - 에러 상태 초기화
       setState((prev) => ({ ...prev, loading: true, error: null }));
@@ -68,23 +69,23 @@ export const PokemonProvider = ({ children }) => {
         error: error.message,
       }));
     }
-  };
+  }, []); // 의존성 배열이 비어있으므로 함수는 한 번만 생성됩니다
 
   // 필터링된 포켓몬 데이터를 업데이트하는 함수
   // SearchContext에서 검색 결과를 업데이트할 때 사용
-  const updateFilteredPokemon = (filteredData) => {
+  const updateFilteredPokemon = useCallback((filteredData) => {
     setState((prev) => ({
       ...prev,
       filteredPokemon: filteredData,
     }));
-  };
+  }, []); // 의존성 배열이 비어있으므로 함수는 한 번만 생성됩니다
 
   // 컴포넌트가 마운트될 때 포켓몬 데이터 로드
   useEffect(() => {
     if (didFetchRef.current) return;
     didFetchRef.current = true;
     loadPokemonData();
-  }, []); // 빈 의존성 배열 = 컴포넌트 마운트 시 한 번만 실행
+  }, [loadPokemonData]); // loadPokemonData가 의존성 배열에 포함됩니다
 
   // Context에 제공할 값들
   const value = {

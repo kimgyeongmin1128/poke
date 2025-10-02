@@ -91,7 +91,9 @@ const PokemonMoves = ({ pokemonMoves, loadingMoves }) => {
               <div className="move-stat">
                 <span className="stat-label">분류:</span>
                 <span className="stat-value">
-                  {MOVE_CATEGORY_KOREAN_MAP[move.category] || move.category}
+                  {MOVE_CATEGORY_KOREAN_MAP[move.category] ||
+                    move.category ||
+                    "—"}
                 </span>
               </div>
 
@@ -99,7 +101,9 @@ const PokemonMoves = ({ pokemonMoves, loadingMoves }) => {
               <div className="move-stat">
                 <span className="stat-label">위력:</span>
                 <span className="stat-value">
-                  {move.power ? move.power : "—"}
+                  {move.power !== null && move.power !== undefined
+                    ? move.power
+                    : "—"}
                 </span>
               </div>
 
@@ -107,14 +111,18 @@ const PokemonMoves = ({ pokemonMoves, loadingMoves }) => {
               <div className="move-stat">
                 <span className="stat-label">정확도:</span>
                 <span className="stat-value">
-                  {move.accuracy ? `${move.accuracy}%` : "—"}
+                  {move.accuracy !== null && move.accuracy !== undefined
+                    ? `${move.accuracy}%`
+                    : "—"}
                 </span>
               </div>
 
               {/* PP (Power Points) */}
               <div className="move-stat">
                 <span className="stat-label">PP:</span>
-                <span className="stat-value">{move.pp || "—"}</span>
+                <span className="stat-value">
+                  {move.pp !== null && move.pp !== undefined ? move.pp : "—"}
+                </span>
               </div>
             </div>
 

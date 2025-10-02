@@ -55,58 +55,63 @@ export const ModalProvider = ({ children }) => {
       const response = await pokeApiInstance.get(`/pokemon/${pokemon.id}`);
       const moves = response.data.moves;
 
-      // 각 기술의 상세 정보를 병렬로 가져오기 (10개로 제한)
-      const moveDetails = await Promise.all(
-        moves.slice(0, 10).map(async (move) => {
-          try {
-            // 개별 기술의 상세 정보 가져오기
-            const moveResponse = await pokeApiInstance.get(
-              `/move/${move.move.name}`
-            );
-            const moveData = moveResponse.data;
+      // 각 기술의 상세 정보를 순차적으로 가져오기 (10개로 제한, 안정성 향상)
+      const moveDetails = [];
+      const movesToLoad = moves.slice(0, 10);
 
-            // 기술 정보 정리
-            return {
-              name: moveData.name, // 기술 영어 이름
-              koreanName:
-                moveData.names?.find((name) => name.language.name === "ko")
-                  ?.name || moveData.name, // 한국어 이름
-              type: moveData.type.name, // 기술 타입
-              power: moveData.power, // 위력
-              accuracy: moveData.accuracy, // 정확도
-              pp: moveData.pp, // PP
-              category: moveData.damage_class.name, // 분류 (물리/특수/변화)
-              description:
-                moveData.flavor_text_entries?.find(
-                  (entry) => entry.language.name === "ko" // 한국어 설명 우선
-                )?.flavor_text ||
-                moveData.flavor_text_entries?.find(
-                  (entry) => entry.language.name === "en" // 없으면 영어 설명
-                )?.flavor_text ||
-                `${moveData.name} 기술입니다.`, // 둘 다 없으면 기본 설명
-            };
-          } catch (error) {
-            console.error(
-              `기술 ${move.move.name} 정보를 가져오는데 실패:`,
-              error
-            );
-            // API 호출 실패 시 기본값 반환
-            return {
-              name: move.move.name,
-              koreanName: move.move.name,
-              type: "normal",
-              power: 50,
-              accuracy: 100,
-              pp: 20,
-              category: "physical",
-              description: `${move.move.name} 기술입니다.`,
-            };
-          }
-        })
-      );
+      for (const move of movesToLoad) {
+        try {
+          // 개별 기술의 상세 정보 가져오기
+          const moveResponse = await pokeApiInstance.get(
+            `/move/${move.move.name}`
+          );
+          const moveData = moveResponse.data;
 
-      // null 값 제거 (실패한 API 호출 결과)
-      const validMoves = moveDetails.filter((move) => move !== null);
+          // 기술 정보 정리 (null/undefined 값 처리)
+          const moveInfo = {
+            name: moveData.name || "알 수 없는 기술", // 기술 영어 이름
+            koreanName:
+              moveData.names?.find((name) => name.language.name === "ko")
+                ?.name ||
+              moveData.name ||
+              "알 수 없는 기술", // 한국어 이름
+            type: moveData.type?.name || "normal", // 기술 타입
+            power: moveData.power || null, // 위력 (null이면 "—" 표시)
+            accuracy: moveData.accuracy || null, // 정확도 (null이면 "—" 표시)
+            pp: moveData.pp || null, // PP (null이면 "—" 표시)
+            category: moveData.damage_class?.name || "status", // 분류 (물리/특수/변화)
+            description:
+              moveData.flavor_text_entries?.find(
+                (entry) => entry.language.name === "ko" // 한국어 설명 우선
+              )?.flavor_text ||
+              moveData.flavor_text_entries?.find(
+                (entry) => entry.language.name === "en" // 없으면 영어 설명
+              )?.flavor_text ||
+              `${moveData.name || "알 수 없는 기술"} 기술입니다.`, // 둘 다 없으면 기본 설명
+          };
+
+          moveDetails.push(moveInfo);
+        } catch (error) {
+          console.error(
+            `기술 ${move.move.name} 정보를 가져오는데 실패:`,
+            error
+          );
+          // API 호출 실패 시 기본값 반환
+          moveDetails.push({
+            name: move.move.name,
+            koreanName: move.move.name,
+            type: "normal",
+            power: 50,
+            accuracy: 100,
+            pp: 20,
+            category: "physical",
+            description: `${move.move.name} 기술입니다.`,
+          });
+        }
+      }
+
+      // 유효한 기술들만 필터링
+      const validMoves = moveDetails.filter((move) => move && move.name);
 
       // 성공 시 상태 업데이트
       setState((prev) => ({
@@ -140,7 +145,9 @@ export const ModalProvider = ({ children }) => {
       ...prev,
       showModal: true,
       selectedPokemon: pokemon,
+      pokemonMoves: null, // 기술 정보 초기화
       loadingDetails: true,
+      loadingMoves: false, // 기술 로딩 상태 초기화
       error: null,
     }));
 

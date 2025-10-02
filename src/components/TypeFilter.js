@@ -92,7 +92,7 @@ const TypeFilter = () => {
   // 필터링된 결과를 PokemonContext에 전달
   useEffect(() => {
     updateFilteredPokemon(filteredPokemon);
-  }, [filteredPokemon, updateFilteredPokemon]);
+  }, [filteredPokemon]); // updateFilteredPokemon은 useCallback으로 메모이제이션되어 있으므로 제거
 
   return (
     <div className="type-filter">
